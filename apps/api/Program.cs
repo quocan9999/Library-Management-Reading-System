@@ -82,6 +82,8 @@ builder.Services.AddScoped<
     api.Modules.Circulation.Services.BorrowingService
 >();
     builder.Services.AddScoped<IBookService, BookService>();
+    builder.Services.AddScoped<IAuthorService, AuthorService>();
+    builder.Services.AddScoped<IReviewService, ReviewService>();
     builder.Services.AddScoped<IChapterService, ChapterService>();
 
     // ===== REDIS HELPERS =====
@@ -213,6 +215,13 @@ builder.Services.AddScoped<
                 Array.Empty<string>()
             }
         });
+
+        var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+        if (File.Exists(xmlPath))
+        {
+            options.IncludeXmlComments(xmlPath);
+        }
     });
 
     var app = builder.Build();

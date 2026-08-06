@@ -15,11 +15,18 @@ import {
   DropdownMenuGroup,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 export default function ReaderLayout({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, logout } = useAuthStore();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Khi đang ở chế độ đọc sách toàn màn hình (/books/[slug]/read), không render header/footer chung của portal
+  const isReaderPage = pathname ? /\/books\/[^/]+\/read(\/|$)/.test(pathname) : false;
+  if (isReaderPage) {
+    return <>{children}</>;
+  }
 
   const handleLogout = async () => {
     await logout();
@@ -33,11 +40,23 @@ export default function ReaderLayout({ children }: { children: React.ReactNode }
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           
           {/* Logo & Main Nav */}
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2 text-primary font-bold text-xl hover:opacity-90 transition-opacity">
               <BookOpen size={24} />
               <span>LibraryHub</span>
             </Link>
+
+            <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+              <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors">
+                Trang chủ
+              </Link>
+              <Link href="/books" className="text-muted-foreground hover:text-foreground transition-colors">
+                Tất cả sách
+              </Link>
+              <Link href="/categories" className="text-muted-foreground hover:text-foreground transition-colors">
+                Thể loại
+              </Link>
+            </nav>
           </div>
 
           {/* User Menu / Login Button */}

@@ -4,9 +4,15 @@ import apiClient from '@/lib/api-client';
 export interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
+  fullName?: string;
+  firstName?: string;
+  lastName?: string;
+  studentCode?: string;
+  avatar?: string | null;
+  branchId?: string;
+  branchName?: string;
+  role?: string;
+  roles?: string[];
   permissions?: string[];
 }
 
@@ -82,6 +88,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 let sessionExpiredRegistered = false;
 if (typeof window !== 'undefined' && !sessionExpiredRegistered) {
   sessionExpiredRegistered = true;
+  if (process.env.NODE_ENV === 'development') {
+    (window as unknown as Record<string, unknown>).__auth_store__ = useAuthStore;
+  }
   window.addEventListener('session-expired', () => {
     useAuthStore.getState().clearAuth();
     // Redirect to login page to prevent broken UI
@@ -90,3 +99,4 @@ if (typeof window !== 'undefined' && !sessionExpiredRegistered) {
     }
   });
 }
+

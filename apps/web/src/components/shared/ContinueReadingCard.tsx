@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card, CardContent } from '@/components/ui/card';
 import { BookOpen } from 'lucide-react';
-import { ReadingProgress } from '@/types';
+import { ReadingProgress } from '@/types/ReadingProgress';
 import { cn } from '@/lib/utils';
 
 export interface ContinueReadingCardProps {
@@ -16,7 +16,7 @@ export interface ContinueReadingCardProps {
  */
 export function ContinueReadingCard({ item, className }: ContinueReadingCardProps) {
   return (
-    <Link href={`/read/${item.bookId}`} className={cn("group block h-full", className)}>
+    <Link href={`/books/${item.book.slug || item.book.id || item.bookId}/read`} className={cn("group block h-full", className)}>
       <Card className="overflow-hidden hover:shadow-md transition-all border-muted/60 bg-card hover:-translate-y-1 h-full">
         <CardContent className="p-0 flex items-center h-32">
           {/* Cover */}
